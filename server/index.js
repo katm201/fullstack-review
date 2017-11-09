@@ -17,7 +17,10 @@ app.post('/repos', function (request, response) {
   // save the repo information in the database
   console.log(request.body);
   response.status(201);
-  response.end(JSON.stringify(dummyData));
+
+  let dummyResponse = dataFormatter(dummyData);
+
+  response.end(JSON.stringify(dummyResponse));
 });
 
 app.get('/repos', function (request, response) {
@@ -25,7 +28,11 @@ app.get('/repos', function (request, response) {
   // This route should send back the top 25 repos
   response.status(200);
   // response.redirect('/');
-  response.end();
+  console.log(request.body);
+
+  let dummyResponse = dataFormatter(dummyData);
+
+  response.end(JSON.stringify(dummyResponse));
 });
 
 let port = 1128;
@@ -34,3 +41,14 @@ app.listen(port, function() {
   console.log(`listening on port ${port}`);
 });
 
+let dataFormatter = function(data) {
+  return data.map( repo => {
+    return {
+      id: repo.id,
+      name: repo.name,
+      url: repo.html_url,
+      login: repo.owner.login,
+      forks_count: repo.forks_count
+    };
+  });
+}
