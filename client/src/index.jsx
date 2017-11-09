@@ -17,12 +17,10 @@ class App extends React.Component {
   }
 
   handleRepoData (data) {
-
     this.setState({ repos: data });
   }
 
   request (options, requestType) {
-
     let handleRepos = this.handleRepoData;
 
     $.ajax({
@@ -32,16 +30,14 @@ class App extends React.Component {
       data: JSON.stringify(options),
       success: function(data) {
         data = JSON.parse(data);
-        console.log('request response')
-        console.log(data);
         
+        console.log(data);
         handleRepos(data);
       },
       failure: function(err) {
         console.log(err);
       }
     });
-
   }
 
   search (term) {
@@ -58,7 +54,7 @@ class App extends React.Component {
     console.log('Initial setup GET request');
     
     let options = {
-      query: ''
+      query: 'forks_count'
     }
 
     this.request(options, 'GET');
@@ -73,6 +69,9 @@ class App extends React.Component {
   }
 }
 
+// note this is for our dummy data, so that our
+// components can load on first visit before our
+// initial GET request fires off
 let dataFormatter = function(data) {
   return data.map( repo => {
     return {
