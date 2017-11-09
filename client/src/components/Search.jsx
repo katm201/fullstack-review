@@ -4,7 +4,8 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      term: ''
+      term: '',
+      terms: ''
     }
     this.search = this.search.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -12,12 +13,16 @@ class Search extends React.Component {
 
   onChange (e) {
     this.setState({
-      term: e.target.value
+      term: e.target.value,
+      terms: e.target.value
     });
   }
 
   search() {
     this.props.onSearch(this.state.term);
+    this.setState({
+      terms: ''
+    });
   }
 
   render() {
