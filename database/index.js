@@ -44,13 +44,14 @@ let save = (reposFromGH, callback) => {
     });
 };
 
-let findTop25 = (query, callback) => {
+let findTop25 = (callback) => {
 
   Repo.find().exec()
     .then(repos => {
       repos.sort((a, b) => { 
-        return b[query] - a[query]; 
+        return b.forks_count - a.forks_count; 
       });
+
       let moreThan25 = repos.length > 25;
 
       if (moreThan25) {

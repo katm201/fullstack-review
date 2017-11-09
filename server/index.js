@@ -35,7 +35,7 @@ app.post('/repos', function (request, response) {
 app.get('/repos', function (request, response) {
   response.status(200);
 
-  db.findTop25(request.body.query, repos => {
+  db.findTop25(repos => {
     response.end(JSON.stringify(repos));
   })
 });
