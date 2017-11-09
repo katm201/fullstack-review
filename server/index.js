@@ -1,7 +1,7 @@
 const express = require('express');
-const reqestModule = require('request');
 const bodyParser = require('body-parser');
 const dummyData = require('../data.json');
+const github = require('../helpers/github');
 
 let app = express();
 
@@ -18,20 +18,20 @@ app.post('/repos', function (request, response) {
   console.log(request.body);
   response.status(201);
 
-  let dummyResponse = dataFormatter(dummyData);
-
-  response.end(JSON.stringify(dummyResponse));
+  github.getReposByUsername(request.body.query, (repos) => {
+    let formattedRepos = dataFormatter(repos);
+    response.end(JSON.stringify(formattedRepos)); 
+  })
 });
 
 app.get('/repos', function (request, response) {
   // TODO - your code here!
   // This route should send back the top 25 repos
   response.status(200);
-  // response.redirect('/');
+
   console.log(request.body);
 
   let dummyResponse = dataFormatter(dummyData);
-
   response.end(JSON.stringify(dummyResponse));
 });
 
