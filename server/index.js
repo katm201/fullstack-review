@@ -16,11 +16,16 @@ app.post('/repos', function (request, response) {
   // and get the repo information from the github API, then
   // save the repo information in the database
   console.log(request.body);
-  response.status(201);
-
+  
   github.getReposByUsername(request.body.query, (repos) => {
-    let formattedRepos = dataFormatter(repos);
-    response.end(JSON.stringify(formattedRepos)); 
+    if (repos.message !== 'Not Found') {
+      response.status(201);
+      console.log('found');
+      let formattedRepos = dataFormatter(repos);
+      response.end(JSON.stringify(formattedRepos)); 
+    } else {
+      response.status(404).send('Not Found');
+    }
   })
 });
 
@@ -29,6 +34,7 @@ app.get('/repos', function (request, response) {
   // This route should send back the top 25 repos
   response.status(200);
 
+  // note: now just sending back the dummy data
   console.log(request.body);
 
   let dummyResponse = dataFormatter(dummyData);
