@@ -45,7 +45,6 @@ let save = (reposFromGH, callback) => {
 };
 
 let findTop25 = (callback) => {
-
   Repo.find().exec()
     .then(repos => {
       repos.sort((a, b) => { 
