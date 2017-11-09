@@ -13,18 +13,19 @@ class App extends React.Component {
     }
     this.search = this.search.bind(this);
     this.handleRepoData = this.handleRepoData.bind(this);
+    this.request = this.request.bind(this);
   }
 
-  search (term) {
-    console.log(`${term} was searched`);
-    let options = {
-      query: term
-    }
+  handleRepoData (data) {
+    this.setState({ repos: data });
+  }
+
+  request (options, requestType) {
 
     let handleRepos = this.handleRepoData;
 
     $.ajax({
-      type: 'POST',
+      type: requestType,
       url: '/repos',
       contentType: 'application/json',
       data: JSON.stringify(options),
@@ -38,10 +39,17 @@ class App extends React.Component {
         console.log(err);
       }
     });
+
   }
 
-  handleRepoData (data) {
-    this.setState({ repos: data });
+  search (term) {
+    console.log(`${term} was searched`);
+    
+    let options = {
+      query: term
+    }
+
+    this.request(options, 'POST');
   }
 
   componentDidMount () {
@@ -51,23 +59,7 @@ class App extends React.Component {
       query: ''
     }
 
-    let handleRepos = this.handleRepoData;
-
-    $.ajax({
-      type: 'GET',
-      url: '/repos',
-      contentType: 'application/json',
-      data: JSON.stringify(options),
-      success: function(data) {
-        data = JSON.parse(data);
-        console.log(data);
-        
-        handleRepos(data);
-      },
-      failure: function(err) {
-        console.log(err);
-      }
-    });
+    this.request(options, 'GET');
   }
 
   render () {
