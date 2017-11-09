@@ -44,4 +44,26 @@ let save = (reposFromGH, callback) => {
     });
 };
 
+let findTop25 = (query, callback) => {
+
+  Repo.find().exec()
+    .then(repos => {
+      repos.sort((a, b) => { 
+        return b.forks_count - a.forks_count; 
+      });
+      let moreThan25 = repos.length > 25;
+
+      if (moreThan25) {
+        let top25 = [];
+        for (var i = 0; i < 25; i++) {
+          top25.push(repos[i]);
+        }
+        callback(top25);
+      } else {
+        callback(repos);
+      }
+    });
+};
+
 module.exports.save = save;
+module.exports.findTop25 = findTop25;
