@@ -17,6 +17,7 @@ class App extends React.Component {
   }
 
   handleRepoData (data) {
+
     this.setState({ repos: data });
   }
 
@@ -31,6 +32,7 @@ class App extends React.Component {
       data: JSON.stringify(options),
       success: function(data) {
         data = JSON.parse(data);
+        console.log('request response')
         console.log(data);
         
         handleRepos(data);

@@ -13,29 +13,18 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-// repoSchema.methods.findAllByLogin = function(callback) {
-//   return this.model('Repo').find({login: this.login}, callback);
-// };
-
-let save = (reposFromGH) => {
-  // create an object that we can add the current ids in our DB to
+let save = (reposFromGH, callback) => {
   let currentIDs = {};
 
   let login = reposFromGH[0].owner.login;
   Repo.find({login: login}).exec()
     .then(reposInMongo => {
-      // save the current IDs as the property
-      // save the current forks as the value, as that's the 
-      // value we'd be updating
-      
       reposInMongo.forEach( repo => {
         currentIDs[repo.id] = repo.forks_count;
       });
 
-      // filter out repos from GH that currently exist in our DB
-      // then format our inputs for Mongo
       let reposToAdd = reposFromGH.filter( repo => {
-        return !currentIDs.hasOwnProperty(repo.id))
+        return !currentIDs.hasOwnProperty(repo.id)
       }).map( repo => {
           return {
             id: repo.id,
@@ -49,14 +38,10 @@ let save = (reposFromGH) => {
       return Repo.insertMany(reposToAdd);
     })
     .then( mongooseRepos => {
-      // 
-      // filter for repos from GH that exist, but need to be updated
-      // let reposToUpdate = reposFromGH.filter( repo => {
-      //   return currentIDs.hasOwnProperty(repo.id) && currentIDs[repo.id] !== repo.forks_count;
-      // })
-    })
-
-  // save whatever is new with correct formatting
+      return Repo.find( {login: login} ).exec();
+    }).then( allUserRepos => {
+      callback(allUserRepos);
+    });
 };
 
 module.exports.save = save;

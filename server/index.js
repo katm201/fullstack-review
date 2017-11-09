@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dummyData = require('../data.json');
 const github = require('../helpers/github');
+const db = require('../database/index');
 
 let app = express();
 
@@ -17,12 +18,23 @@ app.post('/repos', function (request, response) {
   // save the repo information in the database
   console.log(request.body);
   
+
+  // gets the repos from GitHub, then saves them to Mongo
+  // then reponds back with what's in Mongo
   github.getReposByUsername(request.body.query, (repos) => {
     if (repos.message !== 'Not Found') {
+      // repos found, response set to 201
       response.status(201);
-      console.log('found');
-      let formattedRepos = dataFormatter(repos);
-      response.end(JSON.stringify(formattedRepos)); 
+      
+      // save repos to MongoDB
+      db.save(repos, mongooseRepos => {
+        console.log(mongooseRepos);
+        // response.end(mongooseRepos);
+        response.end(JSON.stringify(mongooseRepos));
+      });
+
+      // let formattedRepos = dataFormatter(repos);
+      // response.end(JSON.stringify(formattedRepos)); 
     } else {
       response.status(404).send('Not Found');
     }
