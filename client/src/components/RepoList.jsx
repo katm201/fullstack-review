@@ -2,22 +2,14 @@ import React from 'react';
 
 const RepoListItem = (props) => (
   <div>
-    <h4> Repo List Item Component </h4>
-    <div>
-      <ul>
-        <li>{props.repo.name}</li>
-        <li></li>
-        <li></li>
-      </ul>
-    </div>
+    <div>{props.repo.login}'s <a href={props.repo.url}>{props.repo.name}</a></div>
   </div>
 )
 
 const RepoList = (props) => (
   <div>
-    <h4> Repo List Component </h4>
-    There are {props.repos.length} repos.
-    <RepoListItem repo={props.repos[0]} />
+    <h4>There are {props.repos.length} repos:</h4>
+    {props.repos.map( (repo, key) => { return <RepoListItem repo={repo} key={key} /> })}
   </div>
 )
 
