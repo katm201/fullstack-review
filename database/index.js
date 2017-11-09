@@ -49,7 +49,7 @@ let findTop25 = (query, callback) => {
   Repo.find().exec()
     .then(repos => {
       repos.sort((a, b) => { 
-        return b.forks_count - a.forks_count; 
+        return b[query] - a[query]; 
       });
       let moreThan25 = repos.length > 25;
 
