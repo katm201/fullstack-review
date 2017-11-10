@@ -1,12 +1,14 @@
 const rp = require('request-promises');
 const config = require('../config.js');
 
+const TOKEN = process.env.TOKEN || config.TOKEN;
+
 let getReposByUsername = (username, callback) => {
   let options = {
     uri: `https://api.github.com/users/${username}/repos`,
     headers: {
       'User-Agent': 'request-promise',
-      'Authorization': `token ${config.TOKEN}`
+      'Authorization': `token ${TOKEN}`
     },
     type: 'owner',
   };
